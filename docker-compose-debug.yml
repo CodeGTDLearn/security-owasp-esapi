@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  esapi-mysql:
+    image: mysql:5.7
+    container_name: esapi-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=esapi
+    volumes:
+      - esapidb:/var/lib/mysql
+    networks:
+      - esapi
+
+  esapi-web:
+    image: maven:3.6.0-jdk-8-alpine
+    container_name: esapi-web
+    working_dir: /app
+    ports:
+      - "8083:8083"
+      - "5005:5005"
+    depends_on:
+      - esapi-mysql
+    volumes:
+      - ".:/app"
+      - "~/.m2:/root/.m2"
+    command: mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+    networks:
+      - esapi
+
+networks:
+   esapi:
+
+volumes:
+   esapidb:
