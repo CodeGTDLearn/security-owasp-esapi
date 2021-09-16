@@ -38,9 +38,7 @@ public class Cleanup{
     {
 
         PolicyFactory policy = new HtmlPolicyBuilder().toFactory();
-
         String sanit = policy.sanitize(dirtyString);
-
         System.out.println("\nSANIT - Dirty: " + dirtyString + " - Sanit: " + sanit);
 
     }
